@@ -24,7 +24,7 @@ class TodoList(Resource):
         try:
             my_todos = Todo.fetch_all() # .query.all()
             todos = todos_schema.dump(my_todos)
-            return {'status':'Matches retrieved', 'data':todos}, 200
+            return {'status':'Matches retrieved', 'todos':todos}, 200
         except KeyError as e:
             api.abort(500, e.__doc__, status = "Could not perform this action", statusCode = "500")
         except Exception as e:
@@ -39,7 +39,7 @@ class TodoList(Resource):
             new_todo = Todo(title=data['title'], description=data['description'])
             new_todo.insert_record()
             todo = todo_schema.dump(data)
-            return {'status':'Todo item added', 'data':todo}, 201
+            return {'status':'Todo item added', 'todo':todo}, 201
         except KeyError as e:
             api.abort(500, e.__doc__, status = "Could not perform this action", statusCode = "500")
         except Exception as e:
@@ -58,7 +58,7 @@ class TodoItem(Resource):
                 e = BadRequest('Todo item does not exist')
                 e.data = {'status':'404'}
                 raise e
-            return {'status':'Match retrieved', 'data':todo}, 200
+            return {'status':'Match retrieved', 'todo':todo}, 200
         except KeyError as e:
             api.abort(500, e.__doc__, status = "Could not retrieve information", statusCode = "500")
         except Exception as e:
@@ -77,7 +77,7 @@ class TodoItem(Resource):
             updated = datetime.utcnow()
             Todo.update_todo(id=id, title=title,  description=description, updated=updated)
             todo = todo_schema.dump(data)
-            return {'status':'Todo item has been updated', 'data':todo}, 201
+            return {'status':'Todo item has been updated', 'todo':todo}, 201
         except KeyError as e:
             api.abort(500, e.__doc__, status = "Could not perform this action", statusCode = "500")
         except Exception as e:
