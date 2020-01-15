@@ -1,32 +1,46 @@
 from flask import Flask, Blueprint
 
 from config import *
+from resources import api, blueprint
+from models import db, ma
 
-
-
-def create_app(config_class):
-    app = Flask(__name__)
-    app.config.from_object(config_class)
-
-    from resources import api, blueprint
-    from models import db, ma
+app = Flask(__name__)
+app.config.from_object(Development)
     
-    #api.init_app(app)
-    app.register_blueprint(blueprint)
+#api.init_app(app)
+app.register_blueprint(blueprint)
     
-    db.init_app(app)
-    ma.init_app(app)
+db.init_app(app)
+ma.init_app(app)
     
-    @app.before_first_request
-    def create_tables():
-        db.create_all()
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
-    return app
+
+#def create_app(config_class):
+    #app = Flask(__name__)
+    #app.config.from_object(config_class)
+
+    #from resources import api, blueprint
+    #from models import db, ma
+    
+    ##api.init_app(app)
+    #app.register_blueprint(blueprint)
+    
+    #db.init_app(app)
+    #ma.init_app(app)
+    
+    #@app.before_first_request
+    #def create_tables():
+        #db.create_all()
+
+    #return app
 
 
 
 
 if __name__ == '__main__':
-    app = create_app('config.Production')
+    #app = create_app('config.Production')
     #app.run(debug=True, port=5055)
     app.run()
