@@ -1,3 +1,4 @@
+from flask import Flask
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
@@ -8,7 +9,7 @@ from resources import api, blueprint
 from models import db, ma
 
 app = Flask(__name__)
-app.config.from_object(Development)
+app.config.from_object(Production)
     
 #api.init_app(app)
 app.register_blueprint(blueprint)
