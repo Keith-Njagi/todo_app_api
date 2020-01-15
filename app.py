@@ -12,7 +12,7 @@ def create_app(config_class):
     from models import db, ma
     
     #api.init_app(app)
-    app.register_blueprint(blueprint, url_prefix='/api')
+    app.register_blueprint(blueprint)
     
     db.init_app(app)
     ma.init_app(app)
