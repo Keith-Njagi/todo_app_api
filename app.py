@@ -18,10 +18,7 @@ def create_app(config_class):
     
     return app
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 if __name__ == '__main__':
-    app = create_app('config.Production')
+    app = create_app('config.Development')
     app.run(debug=True, port=5055)

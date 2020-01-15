@@ -23,7 +23,7 @@ class TodoList(Resource):
     def get(self):
         '''List all todos'''
         try:
-            my_todos = Todo.fetch_all() # .query.all()
+            my_todos = Todo.fetch_all() 
             todos = todos_schema.dump(my_todos)
             return {'status':'Matches retrieved', 'todos':todos}, 200
         except KeyError as e:
@@ -46,12 +46,12 @@ class TodoList(Resource):
         except Exception as e:
             api.abort(400, e.__doc__, status = "Could not perform this action", statusCode = "400")
 
-        
-@api.route('/<id>')
+@api.route('/<int:id>')
 @api.param('id', 'The todo item identifier')
 class TodoItem(Resource):
     @api.doc('get_todo', responses={ 200: 'OK', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })
     def get(self, id):
+        '''Get todo item from database'''
         try:
             my_todo = Todo.fetch_by_id(id)
             todo = todo_schema.dump(my_todo)
@@ -71,7 +71,7 @@ class TodoItem(Resource):
         '''Edit todo item in database'''
         try:
             data = api.payload
-            print('My payload: ', data)
+            
             id=id
             title = data['title']
             description = data['description']
@@ -91,6 +91,6 @@ class TodoItem(Resource):
             Todo.delete_by_id(id)
             return {'status':'Todo item has been deleted'}
         except KeyError as e:
-            ns_todos.abort(500, e.__doc__, status = "Could not perform this action", statusCode = "500")
+            api.abort(500, e.__doc__, status = "Could not perform this action", statusCode = "500")
         except Exception as e:
-            ns_todos.abort(400, e.__doc__, status = "Could perform this action", statusCode = "400")
+            api.abort(400, e.__doc__, status = "Could perform this action", statusCode = "400")
