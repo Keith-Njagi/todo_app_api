@@ -2,10 +2,10 @@ from flask import Flask, Blueprint
 
 from config import *
 
-app = Flask(__name__)
+
 
 def create_app(config_class):
-    
+    app = Flask(__name__)
     app.config.from_object(config_class)
 
     from resources import api, blueprint
