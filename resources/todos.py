@@ -88,6 +88,12 @@ class TodoItem(Resource):
     def delete(self, id):
         '''Delete todo item from database'''
         try:
+            my_todo = Todo.fetch_by_id(id)
+            todo = todo_schema.dump(my_todo)
+            if len(todo) == 0:
+                e = BadRequest('Todo item does not exist')
+                e.data = {'status':'404'}
+                raise e
             Todo.delete_by_id(id)
             return {'status':'Todo item has been deleted'}
         except KeyError as e:
