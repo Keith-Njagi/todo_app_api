@@ -16,6 +16,7 @@ todo_model = api.model('Todo', {
     'description': fields.String(required=True, description='The description'),
 })
 
+
 @api.route('/')
 class TodoList(Resource):
     @api.doc('list_todos', responses={ 200: 'OK', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })    
