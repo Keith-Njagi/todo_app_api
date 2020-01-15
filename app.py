@@ -11,7 +11,7 @@ def create_app(config_class):
     from resources import api, blueprint
     from models import db, ma
     
-    api.init_app(app)
+    #api.init_app(app)
     app.register_blueprint(blueprint)
     
     db.init_app(app)
