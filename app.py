@@ -1,4 +1,5 @@
 from flask import Flask, Blueprint
+from flask_cors import CORS
 
 from config import *
 from resources import api, blueprint
@@ -6,17 +7,17 @@ from models import db, ma
 
 app = Flask(__name__)
 app.config.from_object(Production)
-    
+CORS(app)
+
 #api.init_app(app)
 app.register_blueprint(blueprint)
-    
+
 db.init_app(app)
 ma.init_app(app)
-    
+
 @app.before_first_request
 def create_tables():
     db.create_all()
-
 
 #def create_app(config_class):
     #app = Flask(__name__)
