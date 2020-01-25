@@ -1,9 +1,11 @@
 from flask_restplus import Namespace, Resource, fields
 from werkzeug.exceptions import BadRequest
+from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity, jwt_refresh_token_required, create_refresh_token, fresh_jwt_required
+
 
 from datetime import datetime
 
-from models.todo_model import Todo, TodoSchema
+from models.todo_model import Todo, TodoSchema, User
 
 
 api = Namespace('todos', description='Todos Operations')
@@ -13,13 +15,14 @@ todos_schema = TodoSchema(many=True)
 
 todo_model = api.model('Todo', {
     'title': fields.String(required=True, description='The title'),
-    'description': fields.String(required=True, description='The description'),
+    'description': fields.String(required=True, description='The description')
 })
 
 
 @api.route('/')
 class TodoList(Resource):
-    @api.doc('list_todos', responses={ 200: 'OK', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })    
+    @api.doc('list_todos', security='apikey', responses={ 200: 'OK', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })    
+    @jwt_required
     def get(self):
         '''List all todos'''
         try:
@@ -33,11 +36,14 @@ class TodoList(Resource):
     
     @api.doc('post_todo', responses={ 200: 'OK', 201:'Created', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })    
     @api.expect(todo_model)
+    @jwt_required
     def post(self):
         '''Post todo item to database'''
         try:
             data = api.payload
-            new_todo = Todo(title=data['title'], description=data['description'])
+            #user = get_jwt_claims()
+            #user_id = User.fetch_by_user(user).id
+            new_todo = Todo(title=data['title'], description=data['description'])#, user_id=user_id)
             new_todo.insert_record()
             todo = todo_schema.dump(data)
             return {'status':'Todo item added', 'todo':todo}, 201
@@ -50,6 +56,7 @@ class TodoList(Resource):
 @api.param('id', 'The todo item identifier')
 class TodoItem(Resource):
     @api.doc('get_todo', responses={ 200: 'OK', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })
+    @jwt_required
     def get(self, id):
         '''Get todo item from database'''
         try:
@@ -67,6 +74,7 @@ class TodoItem(Resource):
 
     @api.doc('edit_todo', responses={ 200: 'OK', 201:'Created', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })
     @api.expect(todo_model)
+    @jwt_required
     def put(self, id):
         '''Edit todo item in database'''
         try:
@@ -85,6 +93,7 @@ class TodoItem(Resource):
             api.abort(400, e.__doc__, status = "Could not perform this action", statusCode = "400")
 
     @api.doc('delete_todo', responses={ 200: 'OK', 201:'Created', 400: 'Invalid Argument', 404: 'Not Found', 500: 'Mapping Key Error' })
+    @jwt_required
     def delete(self, id):
         '''Delete todo item from database'''
         try:
