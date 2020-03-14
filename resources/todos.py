@@ -1,4 +1,4 @@
-from flask_restplus import Namespace, Resource, fields
+from flask_restx import Namespace, Resource, fields
 from werkzeug.exceptions import BadRequest
 from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity, jwt_refresh_token_required, create_refresh_token, fresh_jwt_required
 

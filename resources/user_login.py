@@ -1,4 +1,4 @@
-from flask_restplus import Namespace, Resource, fields
+from flask_restx import Namespace, Resource, fields
 from werkzeug.exceptions import BadRequest
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
@@ -35,6 +35,9 @@ class LogIn(Resource):
                     
                     current_user = user.username#user_schema.dump(data)
                     return {'status':'User logged in', 'user':current_user, 'access_token': access_token}, 200
+            if not user or not check_password_hash(user.password, data['password']):
+                return {'status':'Could not log in, please check your username and password'}
+
         except KeyError as e:
             api.abort(500, e.__doc__, status = "Could not perform this action", statusCode = "500")
         except Exception as e:

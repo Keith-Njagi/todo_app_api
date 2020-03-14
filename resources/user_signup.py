@@ -1,4 +1,4 @@
-from flask_restplus import Namespace, Resource, fields
+from flask_restx import Namespace, Resource, fields
 from werkzeug.exceptions import BadRequest
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import jwt_required, create_access_token,get_jwt_identity
@@ -8,7 +8,7 @@ from datetime import datetime
 from models.user_model import User, UserSchema
 
 
-api = Namespace('register', description='Register user')
+api = Namespace('signup', description='Register user')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
