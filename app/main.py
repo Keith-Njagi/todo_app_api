@@ -10,7 +10,7 @@ from models import db, ma
 
 
 app = Flask(__name__)
-app.config.from_object(Development)
+app.config.from_object(Production)
 #cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 CORS(app)
 jwt = JWTManager(app)
